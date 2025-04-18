@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container mx-auto max-w-3xl bg-white shadow rounded-lg p-6 my-8">
+    <div class="flex items-center gap-6">
+      {% if player.photo %}
+        <img src="{{ player.photo.url }}" alt="{{ player.name }}"
+             class="w-32 h-32 object-cover rounded-full">
+      {% else %}
+        <img src="{% static 'images/player-default.png' %}"
+             alt="Default Player"
+             class="w-32 h-32 object-cover rounded-full">
+      {% endif %}
+      <div>
+        <h2 class="text-2xl font-semibold">{{ player.name }}</h2>
+        <p class="text-gray-600">{{ player.team.school_name }}</p>
+        {% if player.number %}<p>No. Punggung: {{ player.number }}</p>{% endif %}
+        {% if player.position %}<p>Posisi: {{ player.position }}</p>{% endif %}
+      </div>
+    </div>
+    {% if player.bio %}
+      <div class="mt-6">
+        <h3 class="text-xl font-medium mb-2">Biografi</h3>
+        <p class="text-gray-700">{{ player.bio }}</p>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-6 rounded-lg">
+  <h2 class="text-xl font-semibold mb-4 text-center">Team Login</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="space-y-4">
+      {{ form.identifier.label_tag }}{{ form.identifier }}
+      {{ form.password.label_tag }}{{ form.password }}
+    </div>
+    <button class="mt-6 w-full bg-[#0f1b41] hover:bg-[#18245e] text-white py-2 rounded">Login</button>
+  </form>
+</div>
+{% endblock %}

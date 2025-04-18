@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mx-auto">
+
+  <!--── Card Tim ───────────────────────────────────────────────────────-->
+  <div class="bg-white rounded-2xl p-8 flex flex-col lg:flex-row lg:gap-8 gap-2">
+
+    <!-- Logo -->
+    <div class="w-full lg:w-1/3 flex justify-center">
+      {% if team.logo %}
+        <img src="{{ team.logo.url }}"
+             alt="{{ team.school_name }}"
+             class="object-cover rounded-xl w-60 h-60">
+      {% else %}
+        <img src="{% static 'images/teams-default.png' %}"
+             alt="No logo"
+             class="object-cover rounded-xl w-60 h-60">
+      {% endif %}
+    </div>
+
+    <!-- Info dasar -->
+    <div class="flex-1">
+      <h1 class="text-3xl font-extrabold text-primary">{{ team.school_name }}</h1>
+      {% if team.school_nickname %}
+        <p class="text-lg text-gray-600 mb-4 italic">“{{ team.school_nickname }}”</p>
+      {% endif %}
+
+      <div class="grid grid-cols-2 gap-y-2 text-sm">
+        <div class="font-semibold">Region</div><div>{{ team.region.name }}</div>
+        <div class="font-semibold">Category</div><div class="capitalize">{{ team.get_category_display }}</div>
+        <div class="font-semibold">Coach</div><div>{{ team.coach_name }}</div>
+        <div class="font-semibold">Captain</div><div>{{ team.captain_name }}</div>
+        <div class="font-semibold">Supporter Leader</div><div>{{ team.supporter_name }}</div>
+      </div>
+
+      {% if team.instagram_account %}
+        <div class="mt-4">
+          <a href="https://instagram.com/{{ team.instagram_account|cut:'@' }}"
+             target="_blank"
+             class="inline-flex items-center gap-1 underline text-accent font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2C4.6 2 2 4.6 2 7.75v8.5C2 19.4 4.6 22 7.75 22h8.5C19.4 22 22 19.4 22 16.25v-8.5C22 4.6 19.4 2 16.25 2h-8.5zm0 1.5h8.5c2.1 0 3.75 1.65 3.75 3.75v8.5c0 2.1-1.65 3.75-3.75 3.75h-8.5A3.74 3.74 0 0 1 4 16.25v-8.5A3.74 3.74 0 0 1 7.75 3.5zm8.25 2.25a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM12 7a5 5 0 1 0 .001 10.001A5 5 0 0 0 12 7zm0 1.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z"/></svg>
+            @{{ team.instagram_account|cut:"@" }}
+          </a>
+        </div>
+      {% endif %}
+
+      {% if team.achievements %}
+        <h2 class="text-xl font-semibold mt-6 mb-2">Achievements</h2>
+        <ul class="list-disc list-inside space-y-1 text-gray-800">
+          {% for line in team.achievements.splitlines %}
+            {% if line %}<li>{{ line }}</li>{% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+
+  <!--── Roster Pemain ─────────────────────────────────────────────────-->
+  <h2 class="text-2xl font-bold text-primary mt-12 mb-4">Players</h2>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for p in players %}
+      <div class="bg-white rounded-xl p-4 flex flex-col items-center">
+        {% if p.photo %}
+          <img src="{{ p.photo.url }}" alt="{{ p.name }}"
+               class="w-24 h-24 rounded-full object-cover mb-3">
+        {% else %}
+          <img src="{% static 'images/player-default.png' %}" alt="No photo"
+               class="w-24 h-24 rounded-full object-cover mb-3">
+        {% endif %}
+        <h3 class="font-semibold text-center">{{ p.name }}</h3>
+        <p class="text-sm text-gray-500 text-center">
+          {{ p.get_position_display }}
+          {% if p.is_captain %} &nbsp;•&nbsp; <span class="text-accent font-semibold">Captain</span>{% endif %}
+        </p>
+      </div>
+    {% empty %}
+      <p class="col-span-full text-center">Belum ada pemain terdaftar.</p>
+    {% endfor %}
+  </div>
+
+  <!--── Tombol kembali ke list (opsional) ─────────────────────────────-->
+  <div class="mt-10 text-center">
+    <a href="{% url 'list_teams' %}"
+       class="inline-block px-6 py-2 border rounded-full text-primary hover:bg-primary hover:text-white transition">
+       ← Back to Teams
+    </a>
+  </div>
+
+</div>
+{% endblock %}

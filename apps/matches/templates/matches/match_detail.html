@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2 class="text-2xl font-bold my-6">Detail Pertandingan</h2>
+<div class="container mx-auto p-6 bg-white rounded-lg">
+
+  <div class="flex items-center justify-between mb-8">
+    <!-- Home Team -->
+    <div class="flex items-center">
+      {% if match.team_home.logo_url %}
+        <img src="{{ match.team_home.logo_url }}"
+             alt="{{ match.team_home.name }}"
+             class="w-20 h-20 object-contain mr-4 rounded" />
+      {% else %}
+        <img src="{% static 'images/teams-default.png' %}"
+             alt="Default Logo"
+             class="w-20 h-20 object-contain mr-4 rounded" />
+      {% endif %}
+      <span class="text-lg font-semibold">{{ match.team_home.name }}</span>
+    </div>
+
+    <!-- Score -->
+    <div class="text-4xl font-extrabold">
+      {{ match.score_home }} – {{ match.score_away }}
+    </div>
+
+    <!-- Away Team -->
+    <div class="flex items-center">
+      <span class="text-lg font-semibold mr-4">{{ match.team_away.name }}</span>
+      {% if match.team_away.logo_url %}
+        <img src="{{ match.team_away.logo_url }}"
+             alt="{{ match.team_away.name }}"
+             class="w-20 h-20 object-contain rounded" />
+      {% else %}
+        <img src="{% static 'images/teams-default.png' %}"
+             alt="Default Logo"
+             class="w-20 h-20 object-contain rounded" />
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="space-y-2 text-gray-600 text-sm">
+    <p><strong>Tanggal:</strong>
+      {{ match.match_date|date:"d F Y, H:i" }}</p>
+    <p><strong>Region:</strong> {{ match.region.name }}</p>
+    <p><strong>Kategori:</strong> {{ match.get_category_display }}</p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- ==================== UPCOMING MATCHES CAROUSEL ==================== -->
+<section class="bg-gray-100 py-4">
+  <div class="mx-auto w-full max-w-7xl px-2 sm:px-4 lg:px-8">
+    {% if upcoming_matches %}
+    <div class="flex overflow-x-auto gap-3 pb-2 snap-x snap-mandatory
+                scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+      {% for m in upcoming_matches %}
+      <div class="min-w-[220px] bg-white rounded-lg
+                  p-3 flex flex-col items-center snap-start">
+        <!-- date & time -->
+        <p class="text-xs text-gray-500 mb-2">
+          {{ m.match_date|date:"d M" }}
+        </p>
+
+        <!-- logos -->
+        <div class="flex items-center gap-2 mb-2">
+          <img src="{{ m.team_home.logo_url|default:'/static/images/teams-default.png' }}"
+               class="w-9 h-9 object-contain" alt="">
+          <span class="text-sm font-semibold">vs</span>
+          <img src="{{ m.team_away.logo_url|default:'/static/images/teams-default.png' }}"
+               class="w-9 h-9 object-contain" alt="">
+        </div>
+
+        <!-- team names -->
+        <!-- <p class="text-xs text-center truncate max-w-[180px]">
+          {{ m.team_home.short_name|default:m.team_home.school_name }} vs 
+          {{ m.team_away.short_name|default:m.team_away.school_name }}
+        </p> -->
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      <p class="text-sm text-gray-500 italic">No upcoming matches.</p>
+    {% endif %}
+  </div>
+</section>
+
+
+{% if highlight %}
+<section class="bg-black">
+  <div class="mx-auto aspect-video max-w-6xl">
+    <iframe 
+        src="{{ highlight.embed_url }}?autoplay=1&mute=1"
+        class="w-full h-full"
+        title="{{ highlight.title }}" 
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+    </iframe>
+  </div>
+</section>
+{% endif %}
+
+{% if partners %}
+<section class="py-10 bg-gray-50">
+  <div class="mx-auto max-w-7xl px-2">
+    <h2 class="text-base font-semibold mb-4">Our Partners</h2>
+
+    <div class="flex overflow-x-auto gap-6 scrollbar-thin">
+      {% for p in partners %}
+      <a href="{{ p.url }}" target="_blank" class="min-w-[120px] flex flex-col items-center snap-start">
+        <img src="{{ p.logo.url }}" alt="{{ p.name }}" class="h-16 object-contain" />
+        <!-- <span class="text-sm mt-2 truncate w-full text-center">{{ p.name }}</span> -->
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if main_clubs %}
+<section class="py-10">
+  <div class="mx-auto px-4">
+    <h2 class="text-xl font-semibold mb-6">Main Clubs</h2>
+    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+      {% for t in main_clubs %}
+      <div class="bg-white rounded-md py-2 text-center">
+        <img src="{{ t.logo_url|default:'/static/images/teams-default.png' }}"
+             class="h-16 mx-auto object-contain" alt="{{ t.school_name }}">
+        <p class="text-sm mt-2 truncate">{{ t.short_name|default:t.school_nickname }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if stories %}
+<section class="py-10 bg-gray-100">
+  <div class="mx-auto px-4">
+    <h2 class="text-xl font-semibold mb-6">Success Stories</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {% for s in stories %}
+      <div class="bg-white border rounded-lg overflow-hidden shadow-sm">
+        <img src="{{ s.image.url }}" alt="{{ s.title }}" class="h-40 w-full object-cover">
+        <div class="p-4">
+          <h3 class="font-semibold mb-2">{{ s.title }}</h3>
+          <p class="text-sm text-gray-600 mb-3">{{ s.summary }}</p>
+          {% if s.link %}
+            <a href="{{ s.link }}" target="_blank" class="text-blue-600 text-sm font-semibold">
+              Read more →
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+
+
+<!-- ==================== HERO ==================== -->
+<!-- <section class="bg-primary-bg text-white py-20 text-center">
+  <div class="mx-auto w-full max-w-4xl px-4">
+    <h1 class="text-4xl font-bold">Welcome to Futsal Series</h1>
+    <p class="mt-4 text-lg">
+      The ultimate platform for futsal tournaments, teams, and matches
+    </p>
+    <a href="/matches"
+       class="mt-8 inline-block px-6 py-3 bg-accent-color rounded-full text-lg">
+      See Upcoming Matches
+    </a>
+  </div> -->
+</section>
+
+<!-- ==================== ABOUT ==================== -->
+<!-- <section class="py-20 bg-gray-100">
+  <div class="mx-auto w-full max-w-4xl px-4 text-center">
+    <h2 class="text-3xl font-bold">About Futsal Series</h2>
+    <p class="mt-4 text-lg">
+      Futsal Series is the premier platform for all futsal enthusiasts. Whether you are a player,
+      a coach, or a fan, we provide up‑to‑date information on tournaments, team standings,
+      and match results.
+    </p>
+  </div>
+</section> -->
+
+<!-- ==================== FEATURES ==================== -->
+<!-- <section class="py-20">
+  <div class="mx-auto w-full max-w-6xl px-4">
+    <h2 class="text-3xl font-bold text-center">Our Features</h2>
+    <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="text-center">
+        <div class="text-6xl text-accent-color mb-4">
+          <i class="fas fa-users"></i>
+        </div>
+        <h3 class="text-xl font-semibold">Teams</h3>
+        <p class="mt-2 text-lg">
+          Register your team, manage players, and track performance.
+        </p>
+      </div>
+      <div class="text-center">
+        <div class="text-6xl text-accent-color mb-4">
+          <i class="fas fa-futbol"></i>
+        </div>
+        <h3 class="text-xl font-semibold">Matches</h3>
+        <p class="mt-2 text-lg">
+          View upcoming matches, track live scores, and detailed results.
+        </p>
+      </div>
+      <div class="text-center">
+        <div class="text-6xl text-accent-color mb-4">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <h3 class="text-xl font-semibold">Standings</h3>
+        <p class="mt-2 text-lg">
+          Stay updated with the latest standings and rankings.
+        </p>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+<!-- ==================== CONTACT ==================== -->
+<!-- <section class="py-20 bg-primary-bg text-white">
+  <div class="mx-auto w-full max-w-4xl px-4 text-center">
+    <h2 class="text-3xl font-bold">Get in Touch</h2>
+    <p class="mt-4 text-lg">Have questions or need support? Reach out to us!</p>
+    <a href="/contact"
+       class="mt-8 inline-block px-6 py-3 bg-accent-color rounded-full text-lg">
+      Contact Us
+    </a>
+  </div>
+</section> -->
+{% endblock %}

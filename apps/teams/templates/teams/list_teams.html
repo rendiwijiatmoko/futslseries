@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h2 class="text-2xl font-bold my-8">List of Teams</h2>
+
+<div class="container mx-auto max-w-7xl">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
+    {% for team in page_obj %}
+    <a href="{{ team.get_absolute_url }}" class="block h-full">
+      <div class="bg-white p-4 rounded-lg flex items-start space-x-4 h-full">
+        <!-- Logo -->
+        <div class="flex-shrink-0 w-16 h-16">
+          {% if team.logo_url %}
+            <img src="{{ team.logo_url }}"
+                 alt="{{ team.school_name }} Logo"
+                 class="w-full h-full object-contain rounded">
+          {% else %}
+            <img src="{% static 'images/teams-default.png' %}"
+                 alt="Default Logo"
+                 class="w-full h-full object-contain rounded">
+          {% endif %}
+        </div>
+        <!-- Info -->
+        <div class="flex flex-col flex-1">
+          <!-- Judul, clamp 2 baris -->
+          <h3 class="text-lg font-semibold text-gray-800 line-clamp-2">
+            {{ team.school_name }}
+          </h3>
+          <!-- Stadion di bawah selalu -->
+          <p class="text-sm text-gray-600 mt-auto">
+            {{ team.stadium_name }}
+          </p>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  <div class="mt-8 flex justify-center">
+    <div class="flex space-x-2 text-sm">
+      {% if page_obj.has_previous %}
+        <a href="?page=1" class="px-3 py-1 border rounded">« First</a>
+        <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 border rounded">Previous</a>
+      {% endif %}
+      <span class="px-3 py-1">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 border rounded">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="px-3 py-1 border rounded">Last »</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

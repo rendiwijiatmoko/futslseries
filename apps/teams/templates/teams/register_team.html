@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2 class="text-2xl font-bold my-8">Team Registration</h2>
+<div class="mx-auto w-full bg-white rounded-lg
+            px-4 sm:px-6 lg:px-8 py-6">
+            {{ form.username.errors }}
+            {{ form.username }}
+            
+  <form method="post" enctype="multipart/form-data" class="space-y-10">
+    {% csrf_token %}
+
+    <!-- ========= TEAM INFO ============ -->
+    <section>
+      <h3 class="text-lg font-semibold mb-4">Team Info</h3>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {% for field in team_form.visible_fields %}
+          <div {% if field.name == "team_photo" %}class="sm:col-span-2"{% endif %}>
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-1">
+              {{ field.label }}
+            </label>
+            {{ field }}
+            {% if field.name == "team_photo" %}
+              <img id="team-preview" class="mt-2 h-28 object-contain rounded hidden">
+            {% endif %}
+            {% if field.errors %}
+              <p class="text-red-600 text-xs mt-1">{{ field.errors.0 }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- ========= PLAYERS ============== -->
+    <section>
+      <!-- <h3 class="text-lg font-semibold mb-4">Players</h3> -->
+
+      {% for pform in player_forms %}
+        <div class="rounded-md p-4 mb-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {% for field in pform.visible_fields %}
+              <div {% if field.name == "photo" %}class="sm:col-span-2"{% endif %}>
+                <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-1">
+                  {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.name == "photo" %}
+                  <img class="player-preview mt-2 h-24 object-contain rounded hidden">
+                {% endif %}
+                {% if field.errors %}
+                  <p class="text-red-600 text-xs mt-1">{{ field.errors.0 }}</p>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </section>
+
+    <!-- ========= SUBMIT =============== -->
+    <div class="flex justify-end">
+      <button type="submit"
+              class="bg-[#0f1b41] hover:bg-[#18245e] text-white font-semibold
+                     px-8 py-2 rounded-md shadow transition">
+        Register Team
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- ==== JS PREVIEW ==== -->
+<script>
+  // team photo
+  const tpInput = document.querySelector('input[name="team_photo"]');
+  if (tpInput){
+    tpInput.addEventListener('change', e=>{
+      const f=e.target.files[0];
+      if(f){
+        const img=document.getElementById('team-preview');
+        img.src=URL.createObjectURL(f);
+        img.classList.remove('hidden');
+      }
+    });
+  }
+  // player photos
+  document.querySelectorAll('.player-preview').forEach((img,idx)=>{
+    const input=img.previousElementSibling;
+    input.addEventListener('change',e=>{
+      const f=e.target.files[0];
+      if(f){
+        img.src=URL.createObjectURL(f);
+        img.classList.remove('hidden');
+      }
+    });
+  });
+</script>
+{% endblock %}

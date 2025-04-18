@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-3xl">
+  <article class="bg-white rounded-lg shadow p-6">
+    {% if post.preview_image %}
+      <img src="{{ post.preview_image.url }}" alt="{{ post.title }}"
+           class="w-full h-64 object-cover rounded-lg mb-6">
+    {% else %}
+      <img src="{% static 'images/blog-default.png' %}" alt="{{ post.title }}"
+           class="w-full h-64 object-cover rounded-lg mb-6">
+    {% endif %}
+
+    <h1 class="text-3xl font-bold text-primary mb-4">{{ post.title }}</h1>
+    <span class="text-sm text-gray-400">{{ post.created_at|date:"d M Y, H:i" }}</span>
+
+    <div class="prose max-w-none mt-6">
+      {{ post.content|safe }}   {# jika konten sudah HTML/markdown->HTML #}
+    </div>
+  </article>
+</div>
+{% endblock %}

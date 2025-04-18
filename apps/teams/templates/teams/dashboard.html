@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="text-2xl my-8 font-bold">Dashboard – {{ team.school_name }}</h2>
+<div class="mx-auto w-full space-y-8">
+
+  <!-- Judul -->
+
+  <!-- ==== Edit Team ==== -->
+  <section class="bg-white p-6 rounded-md">
+    <h3 class="text-lg font-semibold mb-4">Edit Team Info</h3>
+    <form method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {% csrf_token %}
+      {% for field in form.visible_fields %}
+        <div class="flex flex-col">
+          <label for="{{ field.id_for_label }}" class="mb-1 font-medium">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+            <span class="text-xs text-gray-500">{{ field.help_text }}</span>
+          {% endif %}
+          {% if field.errors %}
+            <span class="text-xs text-red-500">{{ field.errors|join:", " }}</span>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div class="md:col-span-2 flex justify-end">
+        <button type="submit"
+                class="bg-[#0f1b41] text-white px-4 py-2 rounded-md hover:bg-[#18245e]">
+          Save Team
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ==== Players ==== -->
+  <section>
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-semibold">Players</h3>
+      <a href="{% url 'player_add' %}"
+         class="bg-[#f92a1a] text-white px-4 py-1 rounded-full  text-sm">
+        + Add Player
+      </a>
+    </div>
+
+    <div class="space-y-4">
+      {% for p in players %}
+      <div class="bg-white p-4 rounded-md shadow-sm flex justify-between items-center">
+        <div>
+          <p class="font-medium">
+            {{ p.name }}
+            {% if p.is_captain %}<span class="text-indigo-600">(C)</span>{% endif %}
+          </p>
+          <p class="text-sm text-gray-600">
+            {{ p.position }} &bull; #{{ p.jersey_number }}
+          </p>
+        </div>
+        <div class="flex space-x-3">
+          <a href="{% url 'player_edit' p.pk %}"
+             class="text-[#0f1b41] hover:underline text-sm">Edit</a>
+          <a href="{% url 'player_delete' p.pk %}"
+             class="text-[#f92a1a] hover:underline text-sm">Delete</a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="text-center text-gray-500 py-8">
+        No players added yet.
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+{% endblock %}

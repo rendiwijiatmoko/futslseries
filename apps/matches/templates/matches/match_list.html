@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2 class="text-2xl font-bold my-8">Match List</h2>
+
+<div class="container mx-auto max-w-7xl space-y-8">
+
+  {% for match in matches %}
+  <!-- Tanggal -->
+  <p class="font-semibold text-gray-800">
+      {{ match.match_date|date:"l, d F Y" }}
+  </p>
+
+  <!-- Satu baris pertandingan, dibungkus <a> supaya clickable -->
+  <a href="{% url 'match_detail' match.pk %}" class="block bg-white rounded-lg px-3 py-1 flex items-center justify-between gap-4 hover:shadow-lg transition-shadow">
+      <!-- Home side -->
+      <div class="flex items-center gap-2 flex-1 min-w-0">
+          <span class="hidden sm:inline-block font-medium truncate max-w-[9rem]">
+              {{ match.team_home.school_name }}
+          </span>
+      </div>
+
+      <!-- Score block -->
+      <div class="flex items-center justify-center gap-2 flex-none">
+        <img class="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+               src="{{ match.team_home.logo_url|default:'/static/images/teams-default.png' }}"
+               alt="{{ match.team_home.school_name }} logo">
+          <span class="w-10 h-16 flex items-center justify-center bg-[#f92a1a] text-white text-2xl rounded-md font-bold">
+              {{ match.score_home }}
+          </span>
+          <span class="text-sm sm:text-base font-semibold text-gray-600">vs</span>
+          <span class="w-10 h-16 flex items-center justify-center bg-[#f92a1a] text-white text-2xl rounded-md font-bold">
+              {{ match.score_away }}
+          </span>
+          <img class="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+               src="{{ match.team_away.logo_url|default:'/static/images/teams-default.png' }}"
+               alt="{{ match.team_away.school_name }} logo">
+      </div>
+
+      <!-- Away side -->
+      <div class="flex items-center gap-2 flex-1 min-w-0 justify-end">
+          <span class="hidden sm:inline-block font-medium truncate max-w-[9rem] text-right">
+              {{ match.team_away.school_name }}
+          </span>
+      </div>
+  </a>
+  {% empty %}
+      <p class="text-center text-gray-500">No matches found.</p>
+  {% endfor %}
+
+  <!-- Pagination -->
+  <div class="flex justify-center gap-3 text-sm mt-10">
+      {% if matches.has_previous %}
+        <a href="?page=1" class="border px-3 py-1 rounded">« First</a>
+        <a href="?page={{ matches.previous_page_number }}" class="border px-3 py-1 rounded">Prev</a>
+      {% endif %}
+      <span class="text-gray-600">Page {{ matches.number }} / {{ matches.paginator.num_pages }}</span>
+      {% if matches.has_next %}
+        <a href="?page={{ matches.next_page_number }}" class="border px-3 py-1 rounded">Next</a>
+        <a href="?page={{ matches.paginator.num_pages }}" class="border px-3 py-1 rounded">Last »</a>
+      {% endif %}
+  </div>
+
+</div>
+{% endblock %}

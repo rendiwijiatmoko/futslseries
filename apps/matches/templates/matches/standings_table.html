@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h2 class="text-2xl font-bold my-8">League Standings</h2>
+<div class="container mx-auto">
+
+  <div class="overflow-x-auto rounded-lg bg-white">
+    <table class="min-w-full divide-y divide-gray-200">
+
+      <!-- ===== HEADER ===== -->
+      <!--  desktop -->
+      <thead class="hidden md:table-header-group bg-gray-50 text-xs uppercase sticky top-0 z-10">
+        <tr>
+          <th class="px-4 py-3 text-left">Rank</th>
+          <th class="px-4 py-3 text-left">Team</th>
+          <th class="px-4 py-3 text-center">Matches</th>
+          <th class="px-4 py-3 text-center">W</th>
+          <th class="px-4 py-3 text-center">D</th>
+          <th class="px-4 py-3 text-center">L</th>
+          <th class="px-4 py-3 text-center">Goals</th>
+          <th class="px-4 py-3 text-center">+/-</th>
+          <th class="px-4 py-3 text-center">Points</th>
+        </tr>
+      </thead>
+
+      <!--  mobile -->
+      <thead class="md:hidden bg-gray-50 text-[11px] uppercase sticky top-0 z-10">
+        <tr>
+          <th class="px-3 py-2 text-left">#</th>
+          <th class="px-3 py-2 text-left">Team</th>
+          <th class="px-2 py-2 text-center">M</th>
+          <th class="px-2 py-2 text-center">W</th>
+          <th class="px-2 py-2 text-center">D</th>
+          <th class="px-2 py-2 text-center">L</th>
+          <th class="px-2 py-2 text-center">G</th>
+          <th class="px-2 py-2 text-center">P</th>
+        </tr>
+      </thead>
+
+      <!-- ===== BODY ===== -->
+      <tbody class="divide-y divide-gray-100 text-sm font-medium text-gray-800">
+
+        {% for s in standings %}
+        <tr class="hover:bg-gray-50 whitespace-nowrap">
+
+          <!-- Rank + arrow -->
+          <td class="px-3 py-3 flex items-center gap-1">
+            {{ forloop.counter }}
+            {% if s.position_change == 'up' %}
+              <span class="text-green-500 text-xs md:text-sm">▲</span>
+            {% elif s.position_change == 'down' %}
+              <span class="text-red-500 text-xs md:text-sm">▼</span>
+            {% endif %}
+          </td>
+
+          <!-- Team (logo + name/abbr) -->
+          <td class="px-3 py-3">
+            <div class="flex items-center gap-2 max-w-[11rem]">
+              <img src="{{ s.team.logo_url|default:'/static/images/teams-default.png' }}"
+                   class="w-6 h-6 md:w-7 md:h-7 object-contain" alt="">
+              <!-- mobile: 3‑huruf, desktop: nama penuh -->
+              <span class="md:hidden font-medium">
+                {{ s.team.code|default:s.team.school_name|slice:":3"|upper }}
+              </span>
+              <span class="hidden md:inline-block truncate">
+                {{ s.team.school_name }}
+              </span>
+            </div>
+          </td>
+
+          <!-- Matches -->
+          <td class="px-2 py-3 text-center">{{ s.matches_played }}</td>
+          <!-- W D L -->
+          <td class="px-2 py-3 text-center">{{ s.wins }}</td>
+          <td class="px-2 py-3 text-center">{{ s.draws }}</td>
+          <td class="px-2 py-3 text-center">{{ s.losses }}</td>
+          <!-- Goals -->
+          <td class="px-2 py-3 text-center">{{ s.goals_for }}:{{ s.goals_against }}</td>
+          <!-- GD (desktop only) -->
+          <td class="px-2 py-3 text-center hidden md:table-cell">
+            {{ s.goal_difference }}
+          </td>
+          <!-- Points -->
+          <td class="px-2 py-3 text-center font-semibold">
+            {{ s.points }}
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
